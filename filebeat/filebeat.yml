@@ -1,0 +1,19 @@
+# filebeat.yml
+filebeat.prospectors:
+- type: docker
+  paths:
+   - '/var/lib/docker/containers/*/*.log'
+  containers.ids: '*'
+
+processors:
+  - decode_json_fields:
+      fields: ["message"]
+      target: ""
+      overwrite_keys: true
+  - add_docker_metadata: ~
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+
+logging.to_files: true
+logging.to_syslog: false
