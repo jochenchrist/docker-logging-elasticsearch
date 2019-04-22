@@ -1,16 +1,15 @@
 # filebeat.yml
-filebeat.prospectors:
+
+filebeat.inputs:
 - type: docker
-  paths:
-   - '/var/lib/docker/containers/*/*.log'
   containers.ids: '*'
+  json.message_key: message
+  json.keys_under_root: true
+  json.add_error_key: true
+  json.overwrite_keys: true
 
 processors:
-  - decode_json_fields:
-      fields: ["message"]
-      target: ""
-      overwrite_keys: true
-  - add_docker_metadata: ~
+- add_docker_metadata: ~
 
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
